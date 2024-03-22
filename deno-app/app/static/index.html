@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/static/app.css" rel="stylesheet">
+  <script type="module" src="/static/main.js"></script>
+  <script src="/static/confetti.browser.min.js"></script>
+  <title>ARSO/AXSO 2023-2</title>
+</head>
+<style is:global>
+  :root {
+    --page-w: 800px;
+  }
+
+  html {
+    font-family: system-ui, sans-serif;
+  }
+
+  .text-ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
+
+
+<body>
+  <div id="app" class="min-h-screen bg-neutral-950 text-gray-50 gap-4">
+  </div>
+
+  <template id="main">
+
+    <header class="fixed w-screen top-0 backdrop-blur-md">
+      <img src="/static/logo_uoc.png" class=" w-72 px-2 py-4">
+    </header>
+    <main class="flex flex-col gap-4 px-4 py-32 justify-center">
+      <section class="flex flex-col gap-4 lg:flex-row justify-start items-stretch">
+        <box class="flex flex-col justify-center items-center flex-1 w-full">
+          <div
+            class="text-6xl text-center font-semibold text-transparent pb-8 bg-gradient-to-r from-purple-200 via-purple-400 to-purple-800 bg-clip-text ">
+            {{ title }}</div>
+          <div class="text-xl self-center text-green-500">🥳 Congratulations ‼ the site work!! 🎉 👏 👏 </div>
+        </box>
+        <box v-if="books.length" class="flex flex-col items-center justify-center w-full flex-1">
+          <div class="text-xl font-bold"> Your database response is: </div>
+          <div
+            class="text-transparent bg-clip-text bg-gradient-to-r from-green-200 to-green-500 font-bold text-xl font-mono">
+            <ul class='p-4 text-lg flex flex-col gap-2'>
+              <li><span class='text-white pr-2'>👤</span> {{ student }}</li>
+              <li><span class='text-white'>📅 </span> {{ fmtCreated }}</li>
+            </ul>
+          </div>
+        </box>
+        <box v-else class="!bg-purple-800  text-gray-100  flex items-center">
+          👉 Now you should configure the connection to the database.
+        </box>
+      </section>
+      <section v-if="books.length" class="flex flex-col gap-4">
+        <h2 class="text-3xl font-bold">The more recommended</h2>
+        <db-table :books="books"></db-table>
+      </section>
+    </main>
+  </template>
+
+  <template id="tbl-data">
+    <section class="flex flex-row gap-4 items-stretch flex-wrap">
+      <book-card v-for="book in books" :book="book" :key="book.asin"></book-card>
+    </section>
+  </template>
+
+  <template id="book-card">
+    <box class="flex flex-col gap-1 px-4 py-2 shrink-0 grow-0 basis-1/6 w-48 min-w-60">
+      <img class="h-full max-h-[230px] w-[180px] my-2 object-contain self-center" :src="book.imgurl" alt="">
+      <div>
+        <span class="text-xl font-bold">{{ priceHole }}</span>
+        <span class="text-xs -top-2 relative ml-1">{{ priceFraction }} €</span>
+      </div>
+      <h5 class="h-12">
+        <div class="text-sm font-semibold text-ellipsis">{{ book.title }}</div>
+      </h5>
+      <div class="text-xs font-medium ">{{book.reviews}} reviews</div>
+      <stars :stars="book.stars"></stars>
+    </box>
+  </template>
+
+  <template id="gen-info">
+    <span v-for="gen in genres" :key="gen"
+      class="text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full border-gray-600 border-[1px]">{{ gen }}</span>
+  </template>
+  <template id="box">
+    <article class="bg-neutral-900 border-2 border-slate-400/10 rounded-xl p-4 ">
+      <slot></slot>
+    </article>
+  </template>
+  <template id="stars">
+    <div class="flex items-center">
+      <svg v-for="n in 5" :class="[starActive(n) ? 'text-yellow-300': 'text-gray-300']" class="w-3 h-3  me-1"
+        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+        <path
+          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+      </svg>
+
+      <p class="ms-2 text-xs font-bold text-gray-900 dark:text-white">{{ stars }}</p>
+
+    </div>
+  </template>
+</body>
+
+
+</html>
